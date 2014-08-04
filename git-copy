@@ -1,0 +1,54 @@
+#!/usr/bin/env sh
+
+usage() {
+    echo "usage: git copy <branch:path/to/original/file> <path/to/newfilename>"
+}
+
+version() {
+    echo "git copy plugin v0.1.0"
+    echo
+}
+
+main() {
+    if [ "$#" -lt 2 ]; then
+        usage; exit 1
+    fi
+    orig="$1";
+    copyname="$2"
+    check
+}
+
+function check(){
+	if [ -e $copyname ]
+	then
+		echo "This file already exists. Do you want to overwrite it?"
+		echo "[ yes | no ]"
+        read answer
+        overwrite
+     else
+        copy
+	fi
+}
+
+function overwrite(){
+    case $answer in
+    		"yes"|"y"|"Y")
+    			rm $copyname
+    			copy
+    			;;
+    		"no"|"n"|"N")
+    		    exit 1
+    		    ;;
+    		*)
+    			echo "$1 is not an option."
+    			check
+    			;;
+    esac
+}
+
+function copy(){
+    git show $orig | cat > $copyname
+}
+
+main "$@"
+

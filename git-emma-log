@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+
+usage() {
+    echo "usage: git emma log <subcommand>"
+    echo
+    echo "Available subcommands are:"
+    echo "hello <mystuff>  Displays a log of only my commits"
+}
+
+cmd_log() {
+    if [ "$#" -lt 1 ]; then
+        detailed_log; exit 0
+    elif [ "$#" -eq 1 ]; then
+
+        local subcommand="$1"; shift
+
+        case $subcommand in
+        	"mystuff")
+        		mystuff; exit 0
+        		;;
+			"-h"|"--help")
+				usage; exit 0
+				;;
+			"-v"|"--version")
+				version; exit 0
+				;;
+		esac
+    fi
+    usage; exit 1
+}
+
+detailed_log() {
+    git log --graph --oneline
+}
+
+mystuff() {
+    git log --oneline --decorate --author="bbranch*"
+}

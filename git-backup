@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+
+usage() {
+    echo "usage: git backup <branch>"
+}
+
+version() {
+    echo "git backup plugin v0.1.0"
+    echo
+}
+
+main() {
+    if [ "$#" -lt 1 ]; then
+        usage; exit 1
+    fi
+    local branch="$1";
+    local currentbranch=$(git currentbranch)
+
+    if [ $branch != $currentbranch ]
+        then
+        git checkout $branch
+    fi
+
+    local date=-$(date +%Y.%m.%d.%s)
+    git tag backup/$branch$date
+
+    if [ $branch != $currentbranch ]
+        then
+        git checkout $currentbranch
+     else
+        git checkout master
+    fi
+
+    git branch -D $branch
+}
+
+main "$@"
+
