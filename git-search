@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+usage() {
+    echo "usage: git search <text>"
+}
+
+version() {
+    echo "git search plugin v0.1.0"
+    echo
+}
+
+main() {
+    if [ "$#" -lt 1 ]; then
+        usage; exit 1
+    fi
+    local text="$1";
+
+    git log --grep="$text"
+}
+
+main "$@"
+
